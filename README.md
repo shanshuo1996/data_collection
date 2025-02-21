@@ -118,6 +118,7 @@ python run.py
     "data": {
         "id": "string",
         "name": "string",
+        "data": "string",
         "duration": "integer",
         "reward": "integer"
     }

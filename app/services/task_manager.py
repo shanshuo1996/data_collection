@@ -51,6 +51,7 @@ class TaskManager:
                 "data": {
                     "id": task.id,
                     "name": task.name,
+                    "data": task.data,
                     "duration": task.duration,
                     "reward": task.reward
                 }

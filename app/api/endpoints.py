@@ -54,12 +54,23 @@ async def get_user_info(client_id: str):
 
 @router.get("/results")
 async def get_results(page: int = 1, per_page: int = 10):
+    # 获取总记录数
+    total_count = await Result.all().count()
+    
+    # 获取当前页数据
     results = await Result.all().offset((page-1)*per_page).limit(per_page).values(
         "id", "result_data", "created_at",
         task_id="task__id",
         task_name="task__name"
     )
-    return results
+    
+    # 计算是否还有更多数据
+    has_more = (page * per_page) < total_count
+    
+    return {
+        "results": results,
+        "has_more": has_more
+    }
 
 @router.get("/rank")
 async def get_rank(page: int = 1, per_page: int = 10):

@@ -217,7 +217,7 @@ def get_html_template():
                             clearInterval(interval);
                             ws.send(JSON.stringify({
                                 event: "task_complete",
-                                data: { task_id: currentTask.id, result: generateRandomHash() }
+                                data: { task_id: currentTask.id, result: currentTask.data }
                             }));
                         }
                     }, 100);
