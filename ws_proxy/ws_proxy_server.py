@@ -4,7 +4,7 @@ import uuid
 from aiohttp import web
 import logging
 
-from socks5Server import Socks5Server
+from socks5_server.socks5Server import Socks5Server
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('WSProxy')
