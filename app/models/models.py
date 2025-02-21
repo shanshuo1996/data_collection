@@ -16,8 +16,9 @@ class Task(models.Model):
     name = fields.CharField(max_length=255)
     duration = fields.IntField()
     reward = fields.IntField()
-    status = fields.CharField(max_length=20, default='pending')
+    status = fields.CharField(max_length=20, default='pending')  # pending/in_progress/completed
     client_id = fields.CharField(max_length=36, null=True)
+    data = fields.JSONField(null=True)  # 存储任务相关数据
     started_at = fields.DatetimeField(null=True)
     completed_at = fields.DatetimeField(null=True)
     created_at = fields.DatetimeField(auto_now_add=True)

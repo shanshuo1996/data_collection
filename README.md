@@ -153,6 +153,61 @@ python run.py
 }
 ```
 
+### 批量添加任务示例
+
+```bash
+# 添加2个跳转任务
+curl -X POST http://localhost:8000/add_tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tasks": [
+      {
+        "name": "跳转任务-1",
+        "duration": 2,
+        "reward": 50,
+        "data": {
+          "scheme": "snssdk1128://user/profile/12345"
+        }
+      },
+      {
+        "name": "跳转任务-2",
+        "duration": 3,
+        "reward": 50,
+        "data": {
+          "scheme": "snssdk1128://user/profile/23456"
+        }
+      }
+    ]
+  }'
+```
+
+或者使用 for 循环批量生成：
+
+```bash
+for i in {1..10}; do
+  user_id=$((RANDOM % 90000 + 10000))
+  curl -X POST http://localhost:8000/add_tasks \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"tasks\": [{
+        \"id\": \"task-$i\",
+        \"name\": \"跳转任务-$i\",
+        \"duration\": $((RANDOM % 5 + 1)),
+        \"reward\": 50,
+        \"data\": {
+          \"scheme\": \"snssdk1128://user/profile/$user_id\"
+        }
+      }]
+    }"
+done
+```
+
+这个命令会：
+1. 创建10个随机的跳转任务
+2. 每个任务持续1-5秒不等
+3. 每个任务奖励50积分
+4. 每个任务包含跳转scheme和对应的curl命令
+
 ## 开发环境要求
 
 - Python 3.7+

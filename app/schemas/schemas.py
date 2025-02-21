@@ -9,6 +9,7 @@ class TaskCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     duration: int = Field(..., gt=0)
     reward: int = Field(..., gt=0)
+    data: dict = Field(default={})  # 任务数据，默认为空字典
     id: str = None
 
     @validator('id', pre=True, always=True)
