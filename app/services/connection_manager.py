@@ -10,6 +10,7 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket, client_id: str):
         await websocket.accept()
         self.task_manager.clients[client_id] = websocket
+        self.task_manager.client_states[client_id] = 'idle'  # 初始化为空闲状态
         await self.send_initial_data(websocket, client_id)
         await self.try_assign_task(client_id)
 
@@ -28,11 +29,10 @@ class ConnectionManager:
         }))
 
     async def try_assign_task(self, client_id: str):
-        if client_id in self.task_manager.clients:
-            assigned = await self.task_manager.assign_task(client_id)
-            if not assigned:
-                await self.task_manager.send_to_client(client_id, {"event": "waiting"})
+        await self.task_manager.try_assign_task(client_id)
 
     def disconnect(self, client_id: str):
         if client_id in self.task_manager.clients:
-            del self.task_manager.clients[client_id] 
+            del self.task_manager.clients[client_id]
+            if client_id in self.task_manager.client_states:
+                del self.task_manager.client_states[client_id]  # 清理状态 

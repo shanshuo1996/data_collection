@@ -6,6 +6,7 @@ from typing import List
 from app.models.models import User, Task, Result, Withdrawal
 from app.schemas.schemas import RegisterRequest, TaskList
 from app.templates.index import get_html_template
+from app.core.instances import task_manager
 
 router = APIRouter()
 
@@ -85,9 +86,21 @@ async def add_tasks(task_list: TaskList):
                 batch_size=chunk_size
             )
         
+        # 广播任务数量更新给所有客户端
+        total_tasks = await task_manager.get_pending_tasks_count()
+        for client_id in task_manager.clients:
+            await task_manager.send_to_client(client_id, {
+                "event": "task_count",
+                "data": {"total_tasks": total_tasks}
+            })
+
+        # 尝试分配任务
+        assigned_count = await task_manager.try_assign_tasks()
+        
         return {
             "message": f"Added {len(unique_tasks)} tasks",
-            "duplicates": len(task_data) - len(unique_tasks)
+            "duplicates": len(task_data) - len(unique_tasks),
+            "assigned_clients": assigned_count
         }
     
     except Exception as e:

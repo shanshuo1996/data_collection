@@ -7,12 +7,13 @@ import asyncio
 from app.core.config import DB_CONFIG
 from app.core.instances import task_manager
 from app.api import endpoints, websocket
+from app.services.websocket_service import WebSocketService
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 启动时运行
-    asyncio.create_task(websocket.task_scheduler(task_manager))
-    asyncio.create_task(websocket.check_timeout_tasks())
+    asyncio.create_task(WebSocketService.task_scheduler())
+    asyncio.create_task(WebSocketService.check_timeout_tasks())
     yield
     # 关闭时运行
     pass
