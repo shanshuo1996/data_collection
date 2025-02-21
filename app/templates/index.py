@@ -160,7 +160,11 @@ def get_html_template():
                     document.getElementById('main-interface').style.display = 'block';
                     document.getElementById('user-client-id').textContent = clientId;
 
-                    ws = new WebSocket(`ws://${location.host}/ws/${clientId}`);
+		    // 自动检测协议
+		    const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+
+		    // 创建WebSocket连接
+                    ws = new WebSocket(`${wsProtocol}${location.host}/ws/${clientId}`);
                     
                     ws.onmessage = (event) => {
                         const msg = JSON.parse(event.data);
